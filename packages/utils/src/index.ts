@@ -1,3 +1,4 @@
-import { migrateOptions } from "./migrate-options";
+import { MigrateOptions } from "./migrate-options";
 
-export { migrateOptions };
+export { MigrateOptions };
+

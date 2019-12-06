@@ -3,14 +3,20 @@
   "version": "0.20.0",
   "description": "",
   "scripts": {
-    "build": "bash build.sh"
+    "build": "bash build.sh",
+    "start": "bash build.sh && node ./dist/index.js",
+    "lint": "tslint ./src**/*.ts{,x}"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@carbon/charts": "0.20.0",
     "rollup": "1.27.8",
-    "typescript": "3.7.2"
+    "typescript": "3.7.2",
+    "ts-node": "^8.5.4",
+    "tslint": "^5.20.1"
+  },
+  "dependencies": {
+    "semver": "^6.3.0"
   }
 }

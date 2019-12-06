@@ -1,31 +1,33 @@
-import { AxisChartOptions } from "@carbon/charts/interfaces"
+import * as semver from "semver";
+import { MigrationInterface } from "./migrations/migration.interface";
+import { Migration_0_20_1 } from "./migrations/migrations";
 
-export interface Options extends AxisChartOptions {}
+export class MigrateOptions {
+	migrations: MigrationInterface[] = [ // keep these in chronological sequence
+		new Migration_0_20_1()
+	];
 
-export function migrateOptions(options: Options) {
-    // Replaces any "secondary keys in the given options with primary"
-    if ("axes" in options) {
-        // Checks if any secondary keys exist within each 
-        if ("left" in options.axes && "secondary" in options.axes.left) {
-            console.log("shouldn't be here");
-            Object.defineProperty(options.axes.left, "primary", Object.getOwnPropertyDescriptor(options.axes.left, "secondary"));
-            delete options.axes.left["secondary"];
-        }
+	/**
+	 * Returns options from oldChartVersion format to newChartVersion format.
+	 */
+	migrateOptions(oldChartVersion: string, options: any, newChartVersion = "latest") {
+		if (
+			!semver.valid(oldChartVersion) ||
+			!semver.valid(newChartVersion) ||
+			semver.gt(oldChartVersion, newChartVersion)
+		) {
+			return JSON.parse(JSON.stringify(options));
+		}
 
-        if ("bottom" in options.axes && "secondary" in options.axes.bottom) {
-            Object.defineProperty(options.axes.bottom, "primary", Object.getOwnPropertyDescriptor(options.axes.bottom, "secondary"));
-            delete options.axes.bottom["secondary"];
-        }
+		let newOptions = options;
 
-        if ("top" in options.axes && "secondary" in options.axes.top) {
-            Object.defineProperty(options.axes.top, "primary", Object.getOwnPropertyDescriptor(options.axes.top, "secondary"));
-            delete options.axes.top["secondary"];
-        }
+		this.migrations
+			.filter(migration =>
+				semver.lte(oldChartVersion, migration.version) &&
+				semver.gte(newChartVersion, migration.version)
+			).forEach(migration => newOptions = migration.migrate(newOptions));
 
-        if ("right" in options.axes && "secondary" in options.axes.right) {
-            Object.defineProperty(options.axes.right, "primary", Object.getOwnPropertyDescriptor(options.axes.right, "secondary"));
-            delete options.axes.right["secondary"];
-        }
-    }
-    return options;
+		return newOptions;
+	}
 }
+
