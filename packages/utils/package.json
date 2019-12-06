@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "build": "bash build.sh",
-    "start": "bash build.sh && node ./dist/index.js",
-    "lint": "tslint ./src**/*.ts{,x}"
+    "lint": "tslint ./src/**/*.ts{,x}"
   },
   "keywords": [],
   "author": "",
