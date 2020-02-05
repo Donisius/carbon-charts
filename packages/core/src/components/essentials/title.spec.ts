@@ -1,4 +1,4 @@
-import { TestEnvironment } from "../../tests/index";
+import { TestEnvironment, options as chartOptions } from "../../tests/index";
 
 // import the settings for the css prefixes
 import settings from "carbon-components/src/globals/js/settings";
@@ -53,6 +53,36 @@ describe("title component", () => {
 			// Add event listener for when chart render is finished
 			chartEventsService.addEventListener("render-finished", renderCb);
 		});
+
+		it ("should truncate really long chart titles", async function(done) {
+			const chartEventsService = this.chart.services.events;
+			await this.testEnvironment.destroy(); this.chart.destroy();
+
+			const newChartOptions = Object.assign({}, chartOptions);
+			newChartOptions.title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida, neque non maximus aliquet, libero quam dapibus purus, quis sagittis purus lorem a enim. Sed consequat ultricies pharetra. Etiam malesuada mauris nec urna condimentum facilisis. In ornare, turpis eget rutrum ullamcorper, purus metus porta neque, volutpat venenatis turpis tellus ut erat. Etiam a diam ac velit posuere laoreet vitae vel ligula."
+
+			const testEnvironment = new TestEnvironment();
+
+			testEnvironment.chartOptions = newChartOptions;
+			testEnvironment.render();
+
+			this.chart = testEnvironment.getChartReference();
+			this.testEnvironment = testEnvironment;
+
+			const renderCb = () => {
+				// Remove event listener for when chart render is finished
+				chartEventsService.removeEventListener("render-finished", renderCb);
+
+				const title = select(`g.${settings.prefix}--${options.chart.style.prefix}--title`);
+
+				console.log(title.select("text").html());
+
+				done();
+			};
+
+			// Add event listener for when chart render is finished
+			chartEventsService.addEventListener("render-finished", renderCb);
+		})
 	});
 
 	describe("events", () => {
