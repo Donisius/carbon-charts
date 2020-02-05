@@ -13,10 +13,10 @@ export const options = Object.assign(groupedBarOptions, {
 }) as any;
 
 export class TestEnvironment {
-	chartOptions = options;
-	chartData = data;
+	chartOptions: any = options;
+	chartData: any = data;
 	chart: Chart;
-	chartType = "ScatterChart"
+	chartType = "ScatterChart";
 
 	render() {
 		const holder = createChartHolder("scatter");
