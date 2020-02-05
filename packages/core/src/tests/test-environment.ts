@@ -16,11 +16,12 @@ export class TestEnvironment {
 	chartOptions = options;
 	chartData = data;
 	chart: Chart;
+	chartType = "ScatterChart"
 
 	render() {
 		const holder = createChartHolder("scatter");
 
-		this.chart = new Charts.ScatterChart(
+		this.chart = new Charts[this.chartType](
 			holder,
 			{
 				data: this.chartData,
