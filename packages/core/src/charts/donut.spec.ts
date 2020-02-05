@@ -11,7 +11,7 @@ describe("title component", () => {
         const testEnvironment = new TestEnvironment();
         testEnvironment.chartType = "DonutChart";
         testEnvironment.chartData = donutData;
-        testEnvironment.chartOptions = "DonutChart";
+        testEnvironment.chartOptions = donutOptions;
 		testEnvironment.render();
 
 		this.chart = testEnvironment.getChartReference();
